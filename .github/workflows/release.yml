@@ -23,6 +23,12 @@ jobs:
         shell: pwsh
         run: ./build.ps1
 
+      - name: Build installer (NSIS)
+        shell: pwsh
+        run: |
+          choco install nsis --no-progress -y
+          & "C:\Program Files (x86)\NSIS\makensis.exe" installer\Vigil.nsi
+
       - name: Show binary info
         shell: pwsh
         run: Get-Item build/Vigil.exe | Format-List Name, Length, VersionInfo
@@ -31,11 +37,15 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Vigil
-          path: build/Vigil.exe
+          path: |
+            build/Vigil.exe
+            installer/Output/Vigil-Setup.exe
 
       - name: Publish release
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
-          files: build/Vigil.exe
+          files: |
+            build/Vigil.exe
+            installer/Output/Vigil-Setup.exe
           generate_release_notes: true
