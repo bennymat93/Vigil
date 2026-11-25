@@ -88,7 +88,7 @@ enum StrId {
 static const wchar_t* kStr[S_COUNT][2] = {
     /* S_TIP_ON            */ { L"Vigil - keeping your PC awake",      L"Vigil - מונע נעילה" },
     /* S_TIP_OFF           */ { L"Vigil - paused (PC may lock)",       L"Vigil - מושהת (המחשב עלול להינעל)" },
-    /* S_HEADER            */ { L"Vigil 1.1.1",                        L"Vigil 1.1.1" },
+    /* S_HEADER            */ { L"Vigil 1.2.0",                        L"Vigil 1.2.0" },
     /* S_ST_ON             */ { L"Status: ACTIVE",                     L"מצב: פעיל" },
     /* S_ST_OFF            */ { L"Status: paused",                     L"מצב: מושהת" },
     /* S_ST_SESSION        */ { L"Status: ACTIVE (%d min left)",       L"מצב: פעיל (נותרו %d דק׳)" },
@@ -119,12 +119,12 @@ static const wchar_t* kStr[S_COUNT][2] = {
     /* S_BALLOON_SESSION_END*/{ L"Timed session ended - keep-awake is now off.",
                                 L"הפעילות המתוקצבת הסתיימה - מניעת הנעילה כבויה." },
     /* S_ABOUT_TEXT        */ {
-        L"Vigil 1.1.1\n\n"
+        L"Vigil 1.2.0\n\n"
         L"Keeps your PC awake and prevents it from locking while you are away.\n\n"
         L"Left click the tray icon to toggle on/off.\n"
         L"Right click for settings.\n\n"
         L"No admin rights. No network. Open source (MIT).",
-        L"Vigil 1.1.1\n\n"
+        L"Vigil 1.2.0\n\n"
         L"מונע מהמחשב להיכנס למצב שינה ולהינעל כשאינך לידו.\n\n"
         L"לחיצה שמאלית על הסמל – הפעלה/כיבוי.\n"
         L"לחיצה ימנית – הגדרות.\n\n"

@@ -4,6 +4,16 @@ All notable changes to Vigil are documented here.
 This project follows [Semantic Versioning](https://semver.org/): every change,
 addition or fix bumps the version number.
 
+## [1.2.0] - 2025-11-25
+
+### Added
+- **Windows installer** (`Vigil-Setup.exe`, NSIS): branded welcome/header
+  graphics, license page, optional Desktop shortcut and "Start with Windows"
+  components, per-user install with **no admin required**, a proper uninstaller
+  and Add/Remove Programs entry, in English and Hebrew. Downloadable directly
+  from `downloads/`.
+- Installer source at `installer/Vigil.nsi` (builds with `makensis`).
+
 ## [1.1.1] - 2025-11-25
 
 ### Fixed (QA pass)

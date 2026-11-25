@@ -50,8 +50,13 @@ Vigil יושב באזור ההודעות שליד השעון (System Tray) ומ�
 ### מדריך למשתמש
 לחיצה ימנית על הסמל ← **מדריך למשתמש** פותחת מדריך מוטמע (עברית ואנגלית) עם הסבר ממוספר על כל אפשרות בתפריט.
 
-### הורדה ישירה
-[`downloads/Vigil-v1.1.1.exe`](https://github.com/bennymat93/Vigil/raw/main/downloads/Vigil-v1.1.1.exe) — הרצה מיידית, ללא התקנה.
+### הורדה · Download
+**מתקין (מומלץ · ללא הרשאות מנהל):** [`downloads/Vigil-Setup.exe`](https://github.com/bennymat93/Vigil/raw/main/downloads/Vigil-Setup.exe)
+<br>**גרסה ניידת (ללא התקנה):** [`downloads/Vigil-v1.2.0.exe`](https://github.com/bennymat93/Vigil/raw/main/downloads/Vigil-v1.2.0.exe)
+
+המתקין (עברית + אנגלית) מוסיף קיצור בתפריט התחל, אפשרות לקיצור בשולחן העבודה, אפשרות "הפעלה עם Windows", ומסיר נקי דרך לוח הבקרה.
+
+<p align="center"><img src="docs/img/guide.png" width="620" alt="Vigil — מדריך מוטמע"></p>
 
 ### התקנה
 אין צורך בהתקנה. מורידים את `Vigil.exe` מ[עמוד ההורדות](../../releases/latest) ומריצים. כדי שיעלה אוטומטית בכל הדלקה — פותחים את התפריט הימני ומסמנים "הפעלה עם Windows".
