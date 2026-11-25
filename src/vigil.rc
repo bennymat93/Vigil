@@ -6,7 +6,9 @@ IDI_ACTIVE  ICON  "../assets/vigil_active.ico"
 IDI_PAUSED  ICON  "../assets/vigil_paused.ico"
 
 // ---- Application manifest ----
-1 RT_MANIFEST "vigil.manifest"
+// 1 = CREATEPROCESS_MANIFEST_RESOURCE_ID, 24 = RT_MANIFEST (canonical raw form,
+// accepted by both MS rc.exe and windres without relying on the macro).
+1 24 "vigil.manifest"
 
 // ---- Embedded user guide (extracted to %TEMP% and opened on demand) ----
 IDR_GUIDE_HTML   RCDATA "../docs/guide.html"
@@ -14,10 +16,10 @@ IDR_GUIDE_ACTIVE RCDATA "../assets/vigil_active_256.png"
 IDR_GUIDE_PAUSED RCDATA "../assets/vigil_paused_256.png"
 
 // ---- Version information ----
-#define VER_FILE     1,1,0,0
-#define VER_FILE_STR "1.1.0.0"
-#define VER_PROD     1,1,0,0
-#define VER_PROD_STR "1.1.0"
+#define VER_FILE     1,1,1,0
+#define VER_FILE_STR "1.1.1.0"
+#define VER_PROD     1,1,1,0
+#define VER_PROD_STR "1.1.1"
 
 VS_VERSION_INFO VERSIONINFO
  FILEVERSION    VER_FILE

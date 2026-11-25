@@ -88,7 +88,7 @@ enum StrId {
 static const wchar_t* kStr[S_COUNT][2] = {
     /* S_TIP_ON            */ { L"Vigil - keeping your PC awake",      L"Vigil - מונע נעילה" },
     /* S_TIP_OFF           */ { L"Vigil - paused (PC may lock)",       L"Vigil - מושהת (המחשב עלול להינעל)" },
-    /* S_HEADER            */ { L"Vigil 1.1.0",                        L"Vigil 1.1.0" },
+    /* S_HEADER            */ { L"Vigil 1.1.1",                        L"Vigil 1.1.1" },
     /* S_ST_ON             */ { L"Status: ACTIVE",                     L"מצב: פעיל" },
     /* S_ST_OFF            */ { L"Status: paused",                     L"מצב: מושהת" },
     /* S_ST_SESSION        */ { L"Status: ACTIVE (%d min left)",       L"מצב: פעיל (נותרו %d דק׳)" },
@@ -119,12 +119,12 @@ static const wchar_t* kStr[S_COUNT][2] = {
     /* S_BALLOON_SESSION_END*/{ L"Timed session ended - keep-awake is now off.",
                                 L"הפעילות המתוקצבת הסתיימה - מניעת הנעילה כבויה." },
     /* S_ABOUT_TEXT        */ {
-        L"Vigil 1.1.0\n\n"
+        L"Vigil 1.1.1\n\n"
         L"Keeps your PC awake and prevents it from locking while you are away.\n\n"
         L"Left click the tray icon to toggle on/off.\n"
         L"Right click for settings.\n\n"
         L"No admin rights. No network. Open source (MIT).",
-        L"Vigil 1.1.0\n\n"
+        L"Vigil 1.1.1\n\n"
         L"מונע מהמחשב להיכנס למצב שינה ולהינעל כשאינך לידו.\n\n"
         L"לחיצה שמאלית על הסמל – הפעלה/כיבוי.\n"
         L"לחיצה ימנית – הגדרות.\n\n"
@@ -197,7 +197,9 @@ static void ApplyStartup(bool enable) {
         return;
     if (enable) {
         wchar_t exe[MAX_PATH];
-        GetModuleFileNameW(nullptr, exe, MAX_PATH);
+        DWORD len = GetModuleFileNameW(nullptr, exe, MAX_PATH);
+        if (len == 0 || len >= MAX_PATH) { RegCloseKey(hk); return; }  // unavailable or truncated
+        exe[len] = L'\0';                                              // ensure termination
         wchar_t quoted[MAX_PATH + 2];
         StringCchPrintfW(quoted, MAX_PATH + 2, L"\"%s\"", exe);
         RegSetValueExW(hk, kRunValue, 0, REG_SZ,
@@ -274,11 +276,12 @@ static void SendPulse() {
             break;
         }
         case METHOD_MOUSE: {
-            // nudge one pixel right then back: no visible cursor travel
+            // nudge one pixel right then back. NOCOALESCE avoids the events being
+            // merged, and keeps the net movement at zero regardless of pointer speed.
             in[n].type = INPUT_MOUSE; in[n].mi.dx = 1; in[n].mi.dy = 0;
-            in[n].mi.dwFlags = MOUSEEVENTF_MOVE; n++;
+            in[n].mi.dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_MOVE_NOCOALESCE; n++;
             in[n].type = INPUT_MOUSE; in[n].mi.dx = (DWORD)-1; in[n].mi.dy = 0;
-            in[n].mi.dwFlags = MOUSEEVENTF_MOVE; n++;
+            in[n].mi.dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_MOVE_NOCOALESCE; n++;
             break;
         }
         case METHOD_F15:
@@ -385,8 +388,9 @@ static void ShowMenu() {
     { // live status line
         wchar_t st[96];
         if (g_enabled && g_sessionEnd) {
-            int mins = (int)((g_sessionEnd - GetTickCount64() + 59999) / 60000);
-            StringCchPrintfW(st, 96, T(S_ST_SESSION), mins > 0 ? mins : 0);
+            ULONGLONG now = GetTickCount64();
+            int mins = (g_sessionEnd > now) ? (int)((g_sessionEnd - now + 59999) / 60000) : 0;
+            StringCchPrintfW(st, 96, T(S_ST_SESSION), mins);
         } else {
             StringCchCopyW(st, 96, g_enabled ? T(S_ST_ON) : T(S_ST_OFF));
         }
@@ -512,7 +516,11 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
 
         case WM_TIMER:
             if (wp == TIMER_PULSE) {
-                if (g_enabled) { ApplyExecutionState(); SendPulse(); }
+                if (g_enabled) {
+                    ApplyExecutionState();
+                    SendPulse();
+                    if (g_sessionEnd) UpdateTray(false);   // keep "min left" tooltip fresh
+                }
             } else if (wp == TIMER_SESSION) {
                 SetEnabled(false, true);   // clears session state + releases the lock
                 ShowBalloon(T(S_BALLOON_TITLE), T(S_BALLOON_SESSION_END));
@@ -529,6 +537,8 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
 
         case WM_ENDSESSION:
             // being logged off / shut down: tidy up
+            KillTimer(hwnd, TIMER_PULSE);
+            KillTimer(hwnd, TIMER_SESSION);
             Shell_NotifyIconW(NIM_DELETE, &g_nid);
             SetThreadExecutionState(ES_CONTINUOUS);
             return 0;
@@ -588,7 +598,11 @@ int WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, LPWSTR, int) {
     // and it receives the "TaskbarCreated" broadcast when Explorer restarts.
     g_hwnd = CreateWindowExW(WS_EX_TOOLWINDOW, kWndClass, L"Vigil", WS_POPUP,
                              0, 0, 0, 0, nullptr, nullptr, hInst, nullptr);
-    if (!g_hwnd) return 1;
+    if (!g_hwnd) {
+        if (mtx) { ReleaseMutex(mtx); CloseHandle(mtx); }
+        CoUninitialize();
+        return 1;
+    }
 
     // keep the per-user startup registry entry in sync with the setting
     ApplyStartup(g_cfg.startWithWindows);

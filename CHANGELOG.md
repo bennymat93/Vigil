@@ -4,6 +4,21 @@ All notable changes to Vigil are documented here.
 This project follows [Semantic Versioning](https://semver.org/): every change,
 addition or fix bumps the version number.
 
+## [1.1.1] - 2025-11-25
+
+### Fixed (QA pass)
+- Timed-session status line no longer underflows if the session expired a moment
+  before the timer fires (guarded like the tooltip).
+- The tray tooltip's "min left" now refreshes each pulse during a timed session
+  instead of showing the start value.
+- Mouse-nudge simulation uses `MOUSEEVENTF_MOVE_NOCOALESCE` so the cursor cannot
+  slowly drift.
+- Startup registry: handle `GetModuleFileName` truncation safely.
+- Tidy teardown: release the mutex/COM on the rare window-creation failure, and
+  stop timers on `WM_ENDSESSION`.
+- Manifest resource declared in the canonical raw form (`1 24`) for toolchain
+  robustness.
+
 ## [1.1.0] - 2025-11-25
 
 ### Added
