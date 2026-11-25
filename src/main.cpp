@@ -81,14 +81,14 @@ enum StrId {
     S_TIP_ON, S_TIP_OFF, S_HEADER, S_ST_ON, S_ST_OFF, S_ST_SESSION,
     S_ENABLE, S_KEEPDISPLAY, S_METHOD, S_M_F15, S_M_SCROLL, S_M_MOUSE,
     S_INTERVAL, S_SEC, S_MIN, S_SESSION, S_SESS_OFF, S_HALFHOUR, S_1H, S_2H, S_4H,
-    S_ACTIVE_ON_START, S_START_WITH_WIN, S_LANG, S_EN, S_HE, S_ABOUT, S_EXIT,
+    S_ACTIVE_ON_START, S_START_WITH_WIN, S_LANG, S_EN, S_HE, S_GUIDE, S_ABOUT, S_EXIT,
     S_BALLOON_TITLE, S_BALLOON_SESSION_END, S_ABOUT_TEXT, S_COUNT
 };
 
 static const wchar_t* kStr[S_COUNT][2] = {
     /* S_TIP_ON            */ { L"Vigil - keeping your PC awake",      L"Vigil - מונע נעילה" },
     /* S_TIP_OFF           */ { L"Vigil - paused (PC may lock)",       L"Vigil - מושהת (המחשב עלול להינעל)" },
-    /* S_HEADER            */ { L"Vigil 1.0.0",                        L"Vigil 1.0.0" },
+    /* S_HEADER            */ { L"Vigil 1.1.0",                        L"Vigil 1.1.0" },
     /* S_ST_ON             */ { L"Status: ACTIVE",                     L"מצב: פעיל" },
     /* S_ST_OFF            */ { L"Status: paused",                     L"מצב: מושהת" },
     /* S_ST_SESSION        */ { L"Status: ACTIVE (%d min left)",       L"מצב: פעיל (נותרו %d דק׳)" },
@@ -112,18 +112,19 @@ static const wchar_t* kStr[S_COUNT][2] = {
     /* S_LANG              */ { L"Language",                           L"שפה" },
     /* S_EN                */ { L"English",                            L"English" },
     /* S_HE                */ { L"עברית",      L"עברית" },
+    /* S_GUIDE             */ { L"User guide",                         L"מדריך למשתמש" },
     /* S_ABOUT             */ { L"About Vigil",                        L"אודות Vigil" },
     /* S_EXIT              */ { L"Exit",                               L"יציאה" },
     /* S_BALLOON_TITLE     */ { L"Vigil",                              L"Vigil" },
     /* S_BALLOON_SESSION_END*/{ L"Timed session ended - keep-awake is now off.",
                                 L"הפעילות המתוקצבת הסתיימה - מניעת הנעילה כבויה." },
     /* S_ABOUT_TEXT        */ {
-        L"Vigil 1.0.0\n\n"
+        L"Vigil 1.1.0\n\n"
         L"Keeps your PC awake and prevents it from locking while you are away.\n\n"
         L"Left click the tray icon to toggle on/off.\n"
         L"Right click for settings.\n\n"
         L"No admin rights. No network. Open source (MIT).",
-        L"Vigil 1.0.0\n\n"
+        L"Vigil 1.1.0\n\n"
         L"מונע מהמחשב להיכנס למצב שינה ולהינעל כשאינך לידו.\n\n"
         L"לחיצה שמאלית על הסמל – הפעלה/כיבוי.\n"
         L"לחיצה ימנית – הגדרות.\n\n"
@@ -205,6 +206,45 @@ static void ApplyStartup(bool enable) {
         RegDeleteValueW(hk, kRunValue);
     }
     RegCloseKey(hk);
+}
+
+// ---------------------------------------------------------------------------
+//  User guide (embedded HTML + icons, extracted to %TEMP%\Vigil and opened)
+// ---------------------------------------------------------------------------
+static bool ExtractResource(int id, const wchar_t* outPath) {
+    HRSRC hr = FindResourceW(g_hInst, MAKEINTRESOURCEW(id), RT_RCDATA);
+    if (!hr) return false;
+    HGLOBAL hg = LoadResource(g_hInst, hr);
+    if (!hg) return false;
+    void* data = LockResource(hg);
+    DWORD size = SizeofResource(g_hInst, hr);
+    if (!data || size == 0) return false;
+
+    HANDLE f = CreateFileW(outPath, GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS,
+                           FILE_ATTRIBUTE_NORMAL, nullptr);
+    if (f == INVALID_HANDLE_VALUE) return false;
+    DWORD written = 0;
+    BOOL ok = WriteFile(f, data, size, &written, nullptr);
+    CloseHandle(f);
+    return ok && written == size;
+}
+
+static void OpenGuide() {
+    wchar_t tmp[MAX_PATH];
+    if (!GetTempPathW(MAX_PATH, tmp)) return;
+    wchar_t dir[MAX_PATH];
+    StringCchPrintfW(dir, MAX_PATH, L"%sVigil", tmp);
+    CreateDirectoryW(dir, nullptr);
+
+    wchar_t html[MAX_PATH], icoA[MAX_PATH], icoP[MAX_PATH];
+    StringCchPrintfW(html, MAX_PATH, L"%s\\guide.html", dir);
+    StringCchPrintfW(icoA, MAX_PATH, L"%s\\vigil_active_256.png", dir);
+    StringCchPrintfW(icoP, MAX_PATH, L"%s\\vigil_paused_256.png", dir);
+
+    ExtractResource(IDR_GUIDE_ACTIVE, icoA);
+    ExtractResource(IDR_GUIDE_PAUSED, icoP);
+    if (ExtractResource(IDR_GUIDE_HTML, html))
+        ShellExecuteW(nullptr, L"open", html, nullptr, nullptr, SW_SHOWNORMAL);
 }
 
 // ---------------------------------------------------------------------------
@@ -393,6 +433,7 @@ static void ShowMenu() {
     AppendMenuW(m, MF_POPUP, (UINT_PTR)lang, T(S_LANG));
 
     AppendMenuW(m, MF_SEPARATOR, 0, nullptr);
+    AddItem(m, IDM_GUIDE, T(S_GUIDE), false);
     AddItem(m, IDM_ABOUT, T(S_ABOUT), false);
     AddItem(m, IDM_EXIT,  T(S_EXIT),  false);
 
@@ -442,6 +483,9 @@ static void OnCommand(UINT id) {
         case IDM_ABOUT:
             MessageBoxW(nullptr, T(S_ABOUT_TEXT), T(S_BALLOON_TITLE),
                         MB_OK | MB_ICONINFORMATION | (LangIdx() == 1 ? MB_RTLREADING | MB_RIGHT : 0));
+            break;
+        case IDM_GUIDE:
+            OpenGuide();
             break;
         case IDM_EXIT:
             DestroyWindow(g_hwnd);

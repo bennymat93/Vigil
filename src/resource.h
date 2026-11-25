@@ -5,6 +5,11 @@
 #define IDI_ACTIVE              101
 #define IDI_PAUSED             102
 
+// Embedded user-guide resources (RCDATA)
+#define IDR_GUIDE_HTML          201
+#define IDR_GUIDE_ACTIVE        202
+#define IDR_GUIDE_PAUSED        203
+
 // Tray callback + timers
 #define WM_VIGIL_TRAY          (WM_APP + 1)
 #define TIMER_PULSE            1
@@ -17,6 +22,7 @@
 #define IDM_START_WITH_WIN     2004
 #define IDM_ABOUT              2005
 #define IDM_EXIT               2006
+#define IDM_GUIDE              2007
 
 // Method (radio)
 #define IDM_METHOD_F15         2100

@@ -4,6 +4,14 @@ All notable changes to Vigil are documented here.
 This project follows [Semantic Versioning](https://semver.org/): every change,
 addition or fix bumps the version number.
 
+## [1.1.0] - 2025-11-25
+
+### Added
+- **User guide** item in the right-click menu — opens a built-in, bilingual
+  (English + Hebrew) HTML guide with an annotated, numbered walkthrough of the
+  tray icon and every menu option, plus a "how it works" explanation. The guide
+  and its images are embedded in the executable and extracted on demand.
+
 ## [1.0.0] - 2025-11-25
 
 First release.

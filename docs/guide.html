@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vigil — User Guide</title>
+<style>
+  :root{
+    --bg:#0f1420; --card:#1b2230; --border:#2b3443; --muted:#9aa6b8;
+    --text:#e7edf6; --accent:#22d3ee; --accent2:#2e82ff;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);
+       font-family:Segoe UI,system-ui,Arial,sans-serif;line-height:1.6}
+  .wrap{max-width:860px;margin:0 auto;padding:32px 20px 64px}
+  header{display:flex;align-items:center;gap:16px;margin-bottom:8px}
+  header img{width:64px;height:64px}
+  h1{font-size:30px;margin:0}
+  .tag{color:var(--muted);margin:2px 0 0}
+  .langbar{margin:20px 0;display:flex;gap:8px}
+  .langbar button{background:var(--card);color:var(--text);border:1px solid var(--border);
+       border-radius:8px;padding:8px 16px;cursor:pointer;font-size:14px}
+  .langbar button.active{background:var(--accent);color:#06231f;border-color:var(--accent);font-weight:700}
+  h2{font-size:20px;margin:28px 0 10px;border-bottom:1px solid var(--border);padding-bottom:6px}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px;margin:14px 0}
+  .states{display:flex;gap:24px;flex-wrap:wrap}
+  .state{display:flex;align-items:center;gap:12px}
+  .state img{width:52px;height:52px}
+  .menu{background:#232a38;border:1px solid var(--border);border-radius:10px;
+        padding:8px;max-width:360px;font-size:14px}
+  .menu .row{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:7px}
+  .menu .row:hover{background:#2d3647}
+  .menu .sep{height:1px;background:var(--border);margin:6px 4px}
+  .menu .hdr{color:var(--muted);font-size:12px;padding:4px 10px}
+  .num{flex:none;width:22px;height:22px;border-radius:11px;background:var(--accent);
+       color:#06231f;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center}
+  ol.legend{list-style:none;padding:0;margin:0;counter-reset:n}
+  ol.legend li{display:flex;gap:12px;padding:7px 0;align-items:flex-start}
+  ol.legend li::before{counter-increment:n;content:counter(n);flex:none;width:24px;height:24px;
+       border-radius:12px;background:var(--accent);color:#06231f;font-weight:700;
+       display:flex;align-items:center;justify-content:center;font-size:13px}
+  .click{display:flex;gap:16px;flex-wrap:wrap}
+  .click .card{flex:1;min-width:240px}
+  code{background:#0c1119;border:1px solid var(--border);border-radius:5px;padding:1px 6px}
+  .muted{color:var(--muted)}
+  [dir=rtl]{text-align:right}
+  .hidden{display:none}
+  footer{margin-top:40px;color:var(--muted);font-size:13px;border-top:1px solid var(--border);padding-top:16px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <img src="vigil_active_256.png" alt="Vigil">
+    <div>
+      <h1>Vigil</h1>
+      <p class="tag" data-en="Keeps your PC awake and unlocked" data-he="מונע מהמחשב להיכנס לשינה ולהינעל">Keeps your PC awake and unlocked</p>
+    </div>
+  </header>
+
+  <div class="langbar">
+    <button id="btn-en" class="active" onclick="setLang('en')">English</button>
+    <button id="btn-he" onclick="setLang('he')">עברית</button>
+  </div>
+
+  <!-- ENGLISH -->
+  <section id="en">
+    <h2>What Vigil does</h2>
+    <div class="card">
+      Vigil sits in the system tray (next to the clock) and stops Windows from locking or
+      turning off the screen while you are away — for example during a long video. It is built
+      to withstand strict corporate lock policy, using only standard Windows APIs.
+      <div style="margin-top:12px" class="states">
+        <div class="state"><img src="vigil_active_256.png"><div><b>Active</b><br><span class="muted">keeping the PC awake</span></div></div>
+        <div class="state"><img src="vigil_paused_256.png"><div><b>Paused</b><br><span class="muted">normal locking</span></div></div>
+      </div>
+    </div>
+
+    <h2>Using the tray icon</h2>
+    <div class="click">
+      <div class="card"><b>Left click</b><br><span class="muted">Toggle keep-awake on / off. The icon switches between the open eye (active) and the closed eye (paused).</span></div>
+      <div class="card"><b>Right click</b><br><span class="muted">Open the settings menu (below).</span></div>
+    </div>
+
+    <h2>The right-click menu</h2>
+    <div class="card" style="display:flex;gap:24px;flex-wrap:wrap;align-items:flex-start">
+      <div class="menu">
+        <div class="hdr">Vigil 1.1.0 · Status: ACTIVE</div>
+        <div class="sep"></div>
+        <div class="row"><span class="num">1</span> ✓ Keep awake</div>
+        <div class="row"><span class="num">2</span> ✓ Keep the screen on</div>
+        <div class="row"><span class="num">3</span> Simulation method ▸</div>
+        <div class="row"><span class="num">4</span> Pulse interval ▸</div>
+        <div class="row"><span class="num">5</span> Timed session ▸</div>
+        <div class="sep"></div>
+        <div class="row"><span class="num">6</span> Active when Vigil starts</div>
+        <div class="row"><span class="num">7</span> Start with Windows</div>
+        <div class="sep"></div>
+        <div class="row"><span class="num">8</span> Language ▸</div>
+        <div class="row"><span class="num">9</span> About · Exit</div>
+      </div>
+      <ol class="legend" style="flex:1;min-width:260px">
+        <li>Master on/off — same as a left click.</li>
+        <li>Also keep the display from turning off (not just prevent locking).</li>
+        <li>How Vigil stays active: <b>F15 key</b> (recommended, invisible), Scroll-Lock tap, or a tiny mouse nudge.</li>
+        <li>How often the keep-awake pulse is sent: 30 / 50 / 59 / 120 seconds.</li>
+        <li>Stay awake for a fixed time (30 min / 1 h / 2 h / 4 h) then turn off automatically.</li>
+        <li>Whether Vigil starts in the active state each time it launches.</li>
+        <li>Launch Vigil automatically when you sign in (per-user, no admin).</li>
+        <li>Switch the menu language (English / Hebrew).</li>
+        <li>About box, and Exit to quit Vigil.</li>
+      </ol>
+    </div>
+
+    <h2>How it works</h2>
+    <div class="card">
+      A corporate forced lock is driven by the <b>input idle timer</b>. Vigil combines two layers:
+      it calls <code>SetThreadExecutionState</code> (prevents sleep / display-off) and sends a tiny,
+      harmless <b>F15</b> key pulse every ~50 seconds, which resets the idle timer and defeats the
+      forced lock — all with standard, documented Windows APIs, no admin rights and no network.
+    </div>
+  </section>
+
+  <!-- HEBREW -->
+  <section id="he" dir="rtl" class="hidden">
+    <h2>מה Vigil עושה</h2>
+    <div class="card">
+      ‏Vigil יושב באזור ההודעות שליד השעון ומונע מ-Windows להינעל או לכבות את המסך כשאינך ליד המחשב —
+      למשל בזמן סרטון ארוך. הוא בנוי להתמודד עם מדיניות נעילה מחמירה, באמצעות ממשקי Windows רשמיים בלבד.
+      <div style="margin-top:12px" class="states">
+        <div class="state"><img src="vigil_active_256.png"><div><b>פעיל</b><br><span class="muted">מונע נעילה</span></div></div>
+        <div class="state"><img src="vigil_paused_256.png"><div><b>מושהה</b><br><span class="muted">נעילה רגילה</span></div></div>
+      </div>
+    </div>
+
+    <h2>שימוש בסמל</h2>
+    <div class="click">
+      <div class="card"><b>לחיצה שמאלית</b><br><span class="muted">הפעלה / כיבוי של מניעת הנעילה. הסמל מתחלף בין עין פקוחה (פעיל) לעין עצומה (מושהה).</span></div>
+      <div class="card"><b>לחיצה ימנית</b><br><span class="muted">פתיחת תפריט ההגדרות (למטה).</span></div>
+    </div>
+
+    <h2>תפריט הלחיצה הימנית</h2>
+    <div class="card" style="display:flex;gap:24px;flex-wrap:wrap;align-items:flex-start">
+      <div class="menu">
+        <div class="hdr">Vigil 1.1.0 · מצב: פעיל</div>
+        <div class="sep"></div>
+        <div class="row"><span class="num">1</span> ✓ מניעת נעילה</div>
+        <div class="row"><span class="num">2</span> ✓ להשאיר את המסך דולק</div>
+        <div class="row"><span class="num">3</span> ◂ שיטת סימולציה</div>
+        <div class="row"><span class="num">4</span> ◂ תדירות פעימה</div>
+        <div class="row"><span class="num">5</span> ◂ פעילות מתוקצבת</div>
+        <div class="sep"></div>
+        <div class="row"><span class="num">6</span> פעיל בעת ההפעלה</div>
+        <div class="row"><span class="num">7</span> הפעלה עם Windows</div>
+        <div class="sep"></div>
+        <div class="row"><span class="num">8</span> ◂ שפה</div>
+        <div class="row"><span class="num">9</span> אודות · יציאה</div>
+      </div>
+      <ol class="legend" style="flex:1;min-width:260px">
+        <li>הפעלה/כיבוי כללי — כמו לחיצה שמאלית.</li>
+        <li>למנוע גם כיבוי מסך, לא רק נעילה.</li>
+        <li>איך Vigil נשאר פעיל: מקש <b>F15</b> (מומלץ, בלתי נראה), הקשת Scroll Lock, או הזזת עכבר זעירה.</li>
+        <li>כל כמה זמן נשלחת הפעימה: 30 / 50 / 59 / 120 שניות.</li>
+        <li>השארה פעילה לזמן קצוב (30 דק׳ / שעה / שעתיים / 4 שעות) ואז כיבוי אוטומטי.</li>
+        <li>האם Vigil מתחיל במצב פעיל בכל הפעלה.</li>
+        <li>הפעלה אוטומטית עם Windows (למשתמש הנוכחי, ללא מנהל).</li>
+        <li>החלפת שפת התפריט (אנגלית / עברית).</li>
+        <li>תיבת 'אודות', ו'יציאה' לסגירת Vigil.</li>
+      </ol>
+    </div>
+
+    <h2>איך זה עובד</h2>
+    <div class="card">
+      נעילה כפויה נקבעת לפי <b>מד חוסר הפעילות של הקלט</b>. Vigil משלב שתי שכבות:
+      קריאה ל-<code>SetThreadExecutionState</code> (מונעת שינה וכיבוי מסך) ושליחת פעימת <b>F15</b> תמימה
+      כל כ-50 שניות, שמאפסת את מד חוסר הפעילות ומונעת את הנעילה — הכול בממשקי Windows מתועדים,
+      ללא הרשאות מנהל וללא רשת.
+    </div>
+  </section>
+
+  <footer>Vigil · MIT License · <span class="muted">github.com/bennymat93/Vigil</span></footer>
+</div>
+
+<script>
+  function setLang(l){
+    document.getElementById('en').classList.toggle('hidden', l!=='en');
+    document.getElementById('he').classList.toggle('hidden', l!=='he');
+    document.getElementById('btn-en').classList.toggle('active', l==='en');
+    document.getElementById('btn-he').classList.toggle('active', l==='he');
+    document.documentElement.lang=l;
+    document.querySelectorAll('[data-en]').forEach(function(e){e.textContent=e.getAttribute('data-'+l)});
+  }
+  // default to Hebrew if the OS/browser prefers it
+  if((navigator.language||'').slice(0,2)==='he') setLang('he');
+</script>
+</body>
+</html>
