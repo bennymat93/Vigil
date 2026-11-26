@@ -10,10 +10,18 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/platform-Windows%2010%20%2F%2011-0a7bdc">
-  <img src="https://img.shields.io/badge/size-~140%20KB-success">
+  <a href="https://github.com/bennymat93/Vigil/actions/workflows/release.yml"><img src="https://img.shields.io/github/actions/workflow/status/bennymat93/Vigil/release.yml?branch=main&logo=github&label=build"></a>
+  <img src="https://img.shields.io/badge/version-1.2.0-22d3ee">
+  <img src="https://img.shields.io/badge/platform-Windows%2010%20%2F%2011-0a7bdc?logo=windows&logoColor=white">
+  <img src="https://img.shields.io/badge/lang-C%2B%2B%20Win32-00599C?logo=cplusplus&logoColor=white">
+  <img src="https://img.shields.io/badge/size-~200%20KB-success">
   <img src="https://img.shields.io/badge/admin-not%20required-success">
-  <img src="https://img.shields.io/badge/license-MIT-blue">
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/bennymat93/Vigil?color=blue"></a>
+  <img src="https://img.shields.io/github/last-commit/bennymat93/Vigil?logo=git&logoColor=white">
+</p>
+
+<p align="center">
+  <a href="https://github.com/bennymat93/Vigil/raw/main/downloads/Vigil-Setup.exe"><img src="https://img.shields.io/badge/⬇%20Download-Vigil--Setup.exe-22d3ee?style=for-the-badge"></a>
 </p>
 
 ---
